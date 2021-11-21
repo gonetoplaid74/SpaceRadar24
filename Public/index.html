@@ -1,0 +1,117 @@
+<!<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="ie-edge"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+
+   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+<style media="screen">
+  #mapid{
+    height: 800px;
+  }
+</style>
+    <title>test api</title>
+  </head>
+  <body>
+    <h1>Satellite Locations</h1>
+    <p>ISS latitude: <span id="ISSlat"></span><p>HST latitude: <span id="HSTlat"></span> </p>
+    <p>ISS longitude: <span id="ISSlon"></span></p><p>HST longitude: <span id="HSTlon"></span></p><br>
+  
+    <div id="mapid"></div>
+    <script>
+
+const mymap = L.map('mapid').setView([0, 0], 2);
+const marker = L.marker([0,0]).addTo(mymap);
+const markerHST = L.marker([0,0]).addTo(mymap);
+const circle = L.circle([0, 0], {
+    color: 'red',
+    fillColor: '#f03',
+    fillOpacity: 0.2,
+    radius: 500
+}).addTo(mymap);
+const circleHST = L.circle([0, 0], {
+    color: 'blue',
+    fillColor: '#0000ff',
+    fillOpacity: 0.2,
+    radius: 500
+}).addTo(mymap);
+
+
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoiYWxsYW53NzQiLCJhIjoiY2t1bzRiODM3MHF0dzMxb2FnNjExYmhseSJ9.5upvkY1wgnG0dgXiEUSZQw'
+}).addTo(mymap);
+
+
+  
+
+
+
+async function getISSlocation() {
+
+      const responseISS = await fetch('./file.txt');
+      const data = await responseISS.json();
+      console.log(data);
+     
+const latitude = data[0].latitude;
+const longitude = data[0].longitude;
+
+      marker.setLatLng([latitude, longitude]);
+      circle.setLatLng([latitude, longitude]);
+      circle.setRadius(1000000);
+
+      document.getElementById('ISSlat').textContent = latitude.toFixed(2);
+      document.getElementById('ISSlon').textContent = longitude.toFixed(2);
+     
+      }
+
+      async function getHSTlocation() {
+
+const responseISS = await fetch('./hst.txt');
+const data = await responseISS.json();
+
+const latitude = data[0].latitude;
+const longitude = data[0].longitude;
+
+markerHST.setLatLng([latitude, longitude]);
+circleHST.setLatLng([latitude, longitude]);
+circleHST.setRadius(1000000);
+
+document.getElementById('HSTlat').textContent = latitude.toFixed(2);
+document.getElementById('HSTlon').textContent = longitude.toFixed(2);
+
+}
+
+      getISSlocation()
+      .then(response => {
+      })
+      .catch(err => {
+        console.log('error!');
+        console.error(err);
+      });
+
+      getHSTlocation()
+      .then(response => {
+      })
+      .catch(err => {
+        console.log('error!');
+        console.error(err);
+      });
+
+      setInterval(getISSlocation, 1000);
+      setInterval(getHSTlocation, 1000);
+
+    </script>
+  </body>
+</html>

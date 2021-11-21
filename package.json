@@ -1,0 +1,15 @@
+{
+  "name": "spaceradar24",
+  "version": "1.0.0",
+  "description": "Space Radar - satellite tracker",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Allan Wallace (allanw74@gmail.com)",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security"
+  }
+}
