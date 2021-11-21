@@ -56,7 +56,7 @@ print(deglon)
 print(n)
 
 
-f = open('cosmos1536.txt', 'w')
+f = open('./public/cosmos1536.txt', 'w')
 f.write('[{"name":' + str(n) + ',"latitude":'+ str(deglat) + ',"longitude":' + str(deglon) + '}]')
 f.close()
    

@@ -56,7 +56,7 @@ print(deglon)
 print(n)
 
 
-f = open('chinese.txt', 'w')
+f = open('./public/chinese.txt', 'w')
 f.write('[{"name":' + str(n) + ',"latitude":'+ str(deglat) + ',"longitude":' + str(deglon) + '}]')
 f.close()
    

@@ -20,9 +20,13 @@
     <title>test api</title>
   </head>
   <body>
-    <h1>Satellite Locations</h1>
-    <p>ISS latitude: <span id="ISSlat"></span><p>HST latitude: <span id="HSTlat"></span> </p>
-    <p>ISS longitude: <span id="ISSlon"></span></p><p>HST longitude: <span id="HSTlon"></span></p><br>
+    <p>Satellite Locations</p>
+    <p style="color: #f03"></style>ISS latitude: <span id="ISSlat"></span>ISS longitude: <span id="ISSlon"></span>
+    <p style="color: #0000ff"> HST latitude: <span id="HSTlat"></span> HST longitude: <span id="HSTlon"></span> 
+    <p style="color: #00ff00">  Cosmos1408 latitude: <span id="1408lat"></span>Cosmos1408 longitude: <span id="1408lon"></span>
+    <p style="color: #ffff00"> Cosmos1536 latitude: <span id="1536lat"></span>Cosmos1536 longiude: <span id="1536lon"></span>  
+    <p style="color: #800080"> Tianhe latitude: <span id="Tianhelat"></span> Tianhe longitude: <span id="Tianhelon"></span>
+    <p style="color: #ffa500"> Genesis latitude: <span id="Genesislat"></span>Genesis longitude: <span id="Genesislon"></span>
   
     <div id="mapid"></div>
     <script>
@@ -30,6 +34,10 @@
 const mymap = L.map('mapid').setView([0, 0], 2);
 const marker = L.marker([0,0]).addTo(mymap);
 const markerHST = L.marker([0,0]).addTo(mymap);
+const marker1408 = L.marker([0,0]).addTo(mymap);
+const marker1536 = L.marker([0,0]).addTo(mymap);
+const markerTianhe = L.marker([0,0]).addTo(mymap);
+const markerGenesis = L.marker([0,0]).addTo(mymap);
 const circle = L.circle([0, 0], {
     color: 'red',
     fillColor: '#f03',
@@ -42,7 +50,30 @@ const circleHST = L.circle([0, 0], {
     fillOpacity: 0.2,
     radius: 500
 }).addTo(mymap);
-
+const circle1408 = L.circle([0, 0], {
+    color: 'green',
+    fillColor: '#00ff00',
+    fillOpacity: 0.2,
+    radius: 500
+}).addTo(mymap);
+const circle1536 = L.circle([0, 0], {
+    color: 'yellow',
+    fillColor: '#ffff00',
+    fillOpacity: 0.2,
+    radius: 500
+}).addTo(mymap);
+const circleTianhe = L.circle([0, 0], {
+    color: 'purple',
+    fillColor: '#800080',
+    fillOpacity: 0.2,
+    radius: 500
+}).addTo(mymap);
+const circleGenesis = L.circle([0, 0], {
+    color: 'orange',
+    fillColor: '#ffa500',
+    fillOpacity: 0.2,
+    radius: 500
+}).addTo(mymap);
 
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -54,63 +85,130 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 }).addTo(mymap);
 
 
-  
-
-
-
 async function getISSlocation() {
 
-      const responseISS = await fetch('./file.txt');
-      const data = await responseISS.json();
-      console.log(data);
-     
-const latitude = data[0].latitude;
-const longitude = data[0].longitude;
-
-      marker.setLatLng([latitude, longitude]);
-      circle.setLatLng([latitude, longitude]);
-      circle.setRadius(1000000);
-
-      document.getElementById('ISSlat').textContent = latitude.toFixed(2);
-      document.getElementById('ISSlon').textContent = longitude.toFixed(2);
-     
-      }
-
-      async function getHSTlocation() {
-
-const responseISS = await fetch('./hst.txt');
+const responseISS = await fetch('./file.txt');
 const data = await responseISS.json();
 
+     
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 
+marker.setLatLng([latitude, longitude]);
+circle.setLatLng([latitude, longitude]);
+circle.setRadius(1000000);
+
+document.getElementById('ISSlat').textContent = latitude.toFixed(2);
+document.getElementById('ISSlon').textContent = longitude.toFixed(2);
+     
+}
+
+async function getHSTlocation() {
+const responseISS = await fetch('./hst.txt');
+const data = await responseISS.json();
+const latitude = data[0].latitude;
+const longitude = data[0].longitude;
 markerHST.setLatLng([latitude, longitude]);
 circleHST.setLatLng([latitude, longitude]);
 circleHST.setRadius(1000000);
-
 document.getElementById('HSTlat').textContent = latitude.toFixed(2);
 document.getElementById('HSTlon').textContent = longitude.toFixed(2);
-
+}
+async function get1408location() {
+const responseISS = await fetch('./cosmos1408.txt');
+const data = await responseISS.json();
+const latitude = data[0].latitude;
+const longitude = data[0].longitude;
+marker1408.setLatLng([latitude, longitude]);
+circle1408.setLatLng([latitude, longitude]);
+circle1408.setRadius(1000000);
+document.getElementById('1408lat').textContent = latitude.toFixed(2);
+document.getElementById('1408lon').textContent = longitude.toFixed(2);
+}
+async function get1536location() {
+const responseISS = await fetch('./cosmos1536.txt');
+const data = await responseISS.json();
+const latitude = data[0].latitude;
+const longitude = data[0].longitude;
+marker1536.setLatLng([latitude, longitude]);
+circle1536.setLatLng([latitude, longitude]);
+circle1536.setRadius(1000000);
+document.getElementById('1536lat').textContent = latitude.toFixed(2);
+document.getElementById('1536lon').textContent = longitude.toFixed(2);
+}
+async function getGenesislocation() {
+const responseISS = await fetch('./genesis1.txt');
+const data = await responseISS.json();
+const latitude = data[0].latitude;
+const longitude = data[0].longitude;
+markerGenesis.setLatLng([latitude, longitude]);
+circleGenesis.setLatLng([latitude, longitude]);
+circleGenesis.setRadius(1000000);
+document.getElementById('Genesislat').textContent = latitude.toFixed(2);
+document.getElementById('Genesislon').textContent = longitude.toFixed(2);
+}
+async function getTianhelocation() {
+const responseISS = await fetch('./chinese.txt');
+const data = await responseISS.json();
+const latitude = data[0].latitude;
+const longitude = data[0].longitude;
+markerTianhe.setLatLng([latitude, longitude]);
+circleTianhe.setLatLng([latitude, longitude]);
+circleTianhe.setRadius(1000000);
+document.getElementById('Tianhelat').textContent = latitude.toFixed(2);
+document.getElementById('Tianhelon').textContent = longitude.toFixed(2);
 }
 
-      getISSlocation()
-      .then(response => {
-      })
-      .catch(err => {
-        console.log('error!');
-        console.error(err);
-      });
+getISSlocation()
+.then(response => {
+})
+.catch(err => {
+console.log('error!');
+console.error(err);
+});
 
-      getHSTlocation()
-      .then(response => {
-      })
-      .catch(err => {
-        console.log('error!');
-        console.error(err);
-      });
+getHSTlocation()
+.then(response => {
+})
+.catch(err => {
+console.log('error!');
+console.error(err);
+});
+get1408location()
+.then(response => {
+})
+.catch(err => {
+console.log('error!');
+console.error(err);
+});
+get1536location()
+.then(response => {
+})
+.catch(err => {
+console.log('error!');
+console.error(err);
+});
+getTianhelocation()
+.then(response => {
+})
+.catch(err => {
+console.log('error!');
+console.error(err);
+});
+getGenesislocation()
+.then(response => {
+})
+.catch(err => {
+console.log('error!');
+console.error(err);
+});
 
-      setInterval(getISSlocation, 1000);
-      setInterval(getHSTlocation, 1000);
+setInterval(getISSlocation, 1000);
+setInterval(getHSTlocation, 1000);
+setInterval(get1408location, 1000);
+setInterval(get1536location, 1000);
+setInterval(getTianhelocation, 1000);
+setInterval(getGenesislocation, 1000);
 
     </script>
   </body>
