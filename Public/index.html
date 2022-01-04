@@ -29,10 +29,8 @@
 const mymap = L.map('mapid').setView([0, 0], 2);
 const marker = L.marker([0,0]).addTo(mymap);
 const markerHST = L.marker([0,0]).addTo(mymap);
-const marker1408 = L.marker([0,0]).addTo(mymap);
-const marker1536 = L.marker([0,0]).addTo(mymap);
 const markerTianhe = L.marker([0,0]).addTo(mymap);
-const markerGenesis = L.marker([0,0]).addTo(mymap);
+
 const circle = L.circle([0, 0], {
     color: 'red',
     fillColor: '#f03',
@@ -45,27 +43,9 @@ const circleHST = L.circle([0, 0], {
     fillOpacity: 0.2,
     radius: 500
 }).addTo(mymap);
-const circle1408 = L.circle([0, 0], {
-    color: 'green',
-    fillColor: '#00ff00',
-    fillOpacity: 0.2,
-    radius: 500
-}).addTo(mymap);
-const circle1536 = L.circle([0, 0], {
-    color: 'yellow',
-    fillColor: '#ffff00',
-    fillOpacity: 0.2,
-    radius: 500
-}).addTo(mymap);
 const circleTianhe = L.circle([0, 0], {
     color: 'purple',
     fillColor: '#800080',
-    fillOpacity: 0.2,
-    radius: 500
-}).addTo(mymap);
-const circleGenesis = L.circle([0, 0], {
-    color: 'orange',
-    fillColor: '#ffa500',
     fillOpacity: 0.2,
     radius: 500
 }).addTo(mymap);
@@ -81,18 +61,9 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 //L.toolTip(opacity = 0.5);
 var ISSlatlngs = [];
 var HSTlatlngs = [];
-var polylineOptions = {
-               color: 'gray',
-                weight: 6,
-               opacity: 0.0,
-               smoothFactor: 2.0
-             };
-var ISSpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
-var HSTpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
-var c1408polyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
-var c1536polyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
-var Genesispolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
-var Chinpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+//var ISSpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+//var HSTpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+//var Chinpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
 
 
 async function getISSlocation() {
@@ -110,13 +81,7 @@ marker.bindTooltip("ISS").openTooltip();
 point = {lat: latitude, lng: longitude}; 
 circle.setLatLng([latitude, longitude]);
 circle.setRadius(1000000);
-//ISSpolyline.addLatLng(point);
-//if ((longitude > -177) && (longitude < 130)) {
-//  ISSpolyline.setStyle({
-//    opacity: 0.5
-//});
 
-//console.log(ISSlatlngs);
 document.getElementById('ISSlat').textContent = latitude.toFixed(2);
 document.getElementById('ISSlon').textContent = longitude.toFixed(2);
      
@@ -127,75 +92,19 @@ const responseISS = await fetch('./hst.txt');
 const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
-var lls = (latitude,longitude)
+
 
 markerHST.setLatLng([latitude, longitude]);
 markerHST.bindTooltip("HST").openTooltip();
 point = {lat: latitude, lng: longitude}; 
-//HSTlatlngs = markerHST.getLatLngs();
-//HSTlatlngs.push(lls);
+
 circleHST.setLatLng([latitude, longitude]);
 circleHST.setRadius(1000000);
 
-HSTpolyline.addLatLng(point);
-if ((longitude < -177) && (longitude > 177)) {
-  HSTpolyline.setStyle({
-    opacity: 0
-});
-}
+
 //document.getElementById('HSTlat').textContent = latitude.toFixed(2);
 //document.getElementById('HSTlon').textContent = longitude.toFixed(2);
 
-}
-async function get1408location() {
-const responseISS = await fetch('./cosmos1408.txt');
-const data = await responseISS.json();
-const latitude = data[0].latitude;
-const longitude = data[0].longitude;
-marker1408.setLatLng([latitude, longitude]);
-marker1408.bindTooltip("Cosmos1408").openTooltip();
-circle1408.setLatLng([latitude, longitude]);
-circle1408.setRadius(1000000);
-point = {lat: latitude, lng: longitude};
-
-c1408polyline.addLatLng(point);
-
-if ((longitude < -177) && (longitude > 177)) {
-  c1408polyline.setStyle({
-    opacity: 0
-});
-}
-//document.getElementById('1408lat').textContent = latitude.toFixed(2);
-//document.getElementById('1408lon').textContent = longitude.toFixed(2);
-}
-async function get1536location() {
-const responseISS = await fetch('./cosmos1536.txt');
-const data = await responseISS.json();
-const latitude = data[0].latitude;
-const longitude = data[0].longitude;
-marker1536.setLatLng([latitude, longitude]);
-marker1536.bindTooltip("Cosmos1536").openTooltip();
-circle1536.setLatLng([latitude, longitude]);
-circle1536.setRadius(1000000);
-point = {lat: latitude, lng: longitude}; 
-//document.getElementById('1536lat').textContent = latitude.toFixed(2);
-//document.getElementById('1536lon').textContent = longitude.toFixed(2);
-}
-async function getGenesislocation() {
-const responseISS = await fetch('./genesis1.txt');
-const data = await responseISS.json();
-const latitude = data[0].latitude;
-const longitude = data[0].longitude;
-markerGenesis.setLatLng([latitude, longitude]);
-markerGenesis.bindTooltip("Genesis1").openTooltip();
-circleGenesis.setLatLng([latitude, longitude]);
-circleGenesis.setRadius(1000000);
-point = {lat: latitude, lng: longitude}; 
-if (longitude > -178){
-Genesispolyline.addLatLng(point);
-}
-//document.getElementById('Genesislat').textContent = latitude.toFixed(2);
-//document.getElementById('Genesislon').textContent = longitude.toFixed(2);
 }
 async function getTianhelocation() {
 const responseISS = await fetch('./chinese.txt');
@@ -229,28 +138,8 @@ getHSTlocation()
 console.log('error!');
 console.error(err);
 });
-get1408location()
-.then(response => {
-})
-.catch(err => {
-console.log('error!');
-console.error(err);
-});
-get1536location()
-.then(response => {
-})
-.catch(err => {
-console.log('error!');
-console.error(err);
-});
+
 getTianhelocation()
-.then(response => {
-})
-.catch(err => {
-console.log('error!');
-console.error(err);
-});
-getGenesislocation()
 .then(response => {
 })
 .catch(err => {
@@ -260,10 +149,7 @@ console.error(err);
 
 setInterval(getISSlocation, 1000);
 setInterval(getHSTlocation, 1000);
-setInterval(get1408location, 1000);
-setInterval(get1536location, 1000);
 setInterval(getTianhelocation, 1000);
-setInterval(getGenesislocation, 1000);
 
     </script>
   </body>
