@@ -21,12 +21,7 @@
   </head>
   <body>
     <p>Satellite Locations</p>
-    <p style="color: #f03"></style>ISS latitude: <span id="ISSlat"></span>ISS longitude: <span id="ISSlon"></span>
-    <p style="color: #0000ff"> HST latitude: <span id="HSTlat"></span> HST longitude: <span id="HSTlon"></span> 
-    <p style="color: #00ff00">  Cosmos1408 latitude: <span id="1408lat"></span>Cosmos1408 longitude: <span id="1408lon"></span>
-    <p style="color: #ffff00"> Cosmos1536 latitude: <span id="1536lat"></span>Cosmos1536 longiude: <span id="1536lon"></span>  
-    <p style="color: #800080"> Tianhe latitude: <span id="Tianhelat"></span> Tianhe longitude: <span id="Tianhelon"></span>
-    <p style="color: #ffa500"> Genesis latitude: <span id="Genesislat"></span>Genesis longitude: <span id="Genesislon"></span>
+    <p style="color: #800080"> ISS latitude: <span id="ISSlat"></span> ISS longitude: <span id="ISSlon"></span>
   
     <div id="mapid"></div>
     <script>
@@ -83,6 +78,21 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     zoomOffset: -1,
     accessToken: 'pk.eyJ1IjoiYWxsYW53NzQiLCJhIjoiY2t1bzRiODM3MHF0dzMxb2FnNjExYmhseSJ9.5upvkY1wgnG0dgXiEUSZQw'
 }).addTo(mymap);
+//L.toolTip(opacity = 0.5);
+var ISSlatlngs = [];
+var HSTlatlngs = [];
+var polylineOptions = {
+               color: 'gray',
+                weight: 6,
+               opacity: 0.0,
+               smoothFactor: 2.0
+             };
+var ISSpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var HSTpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var c1408polyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var c1536polyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var Genesispolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var Chinpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
 
 
 async function getISSlocation() {
@@ -95,9 +105,18 @@ const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 
 marker.setLatLng([latitude, longitude]);
+
+marker.bindTooltip("ISS").openTooltip();
+point = {lat: latitude, lng: longitude}; 
 circle.setLatLng([latitude, longitude]);
 circle.setRadius(1000000);
+//ISSpolyline.addLatLng(point);
+//if ((longitude > -177) && (longitude < 130)) {
+//  ISSpolyline.setStyle({
+//    opacity: 0.5
+//});
 
+//console.log(ISSlatlngs);
 document.getElementById('ISSlat').textContent = latitude.toFixed(2);
 document.getElementById('ISSlon').textContent = longitude.toFixed(2);
      
@@ -108,11 +127,25 @@ const responseISS = await fetch('./hst.txt');
 const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
+var lls = (latitude,longitude)
+
 markerHST.setLatLng([latitude, longitude]);
+markerHST.bindTooltip("HST").openTooltip();
+point = {lat: latitude, lng: longitude}; 
+//HSTlatlngs = markerHST.getLatLngs();
+//HSTlatlngs.push(lls);
 circleHST.setLatLng([latitude, longitude]);
 circleHST.setRadius(1000000);
-document.getElementById('HSTlat').textContent = latitude.toFixed(2);
-document.getElementById('HSTlon').textContent = longitude.toFixed(2);
+
+HSTpolyline.addLatLng(point);
+if ((longitude < -177) && (longitude > 177)) {
+  HSTpolyline.setStyle({
+    opacity: 0
+});
+}
+//document.getElementById('HSTlat').textContent = latitude.toFixed(2);
+//document.getElementById('HSTlon').textContent = longitude.toFixed(2);
+
 }
 async function get1408location() {
 const responseISS = await fetch('./cosmos1408.txt');
@@ -120,10 +153,20 @@ const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 marker1408.setLatLng([latitude, longitude]);
+marker1408.bindTooltip("Cosmos1408").openTooltip();
 circle1408.setLatLng([latitude, longitude]);
 circle1408.setRadius(1000000);
-document.getElementById('1408lat').textContent = latitude.toFixed(2);
-document.getElementById('1408lon').textContent = longitude.toFixed(2);
+point = {lat: latitude, lng: longitude};
+
+c1408polyline.addLatLng(point);
+
+if ((longitude < -177) && (longitude > 177)) {
+  c1408polyline.setStyle({
+    opacity: 0
+});
+}
+//document.getElementById('1408lat').textContent = latitude.toFixed(2);
+//document.getElementById('1408lon').textContent = longitude.toFixed(2);
 }
 async function get1536location() {
 const responseISS = await fetch('./cosmos1536.txt');
@@ -131,10 +174,12 @@ const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 marker1536.setLatLng([latitude, longitude]);
+marker1536.bindTooltip("Cosmos1536").openTooltip();
 circle1536.setLatLng([latitude, longitude]);
 circle1536.setRadius(1000000);
-document.getElementById('1536lat').textContent = latitude.toFixed(2);
-document.getElementById('1536lon').textContent = longitude.toFixed(2);
+point = {lat: latitude, lng: longitude}; 
+//document.getElementById('1536lat').textContent = latitude.toFixed(2);
+//document.getElementById('1536lon').textContent = longitude.toFixed(2);
 }
 async function getGenesislocation() {
 const responseISS = await fetch('./genesis1.txt');
@@ -142,10 +187,15 @@ const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 markerGenesis.setLatLng([latitude, longitude]);
+markerGenesis.bindTooltip("Genesis1").openTooltip();
 circleGenesis.setLatLng([latitude, longitude]);
 circleGenesis.setRadius(1000000);
-document.getElementById('Genesislat').textContent = latitude.toFixed(2);
-document.getElementById('Genesislon').textContent = longitude.toFixed(2);
+point = {lat: latitude, lng: longitude}; 
+if (longitude > -178){
+Genesispolyline.addLatLng(point);
+}
+//document.getElementById('Genesislat').textContent = latitude.toFixed(2);
+//document.getElementById('Genesislon').textContent = longitude.toFixed(2);
 }
 async function getTianhelocation() {
 const responseISS = await fetch('./chinese.txt');
@@ -153,10 +203,15 @@ const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 markerTianhe.setLatLng([latitude, longitude]);
+markerTianhe.bindTooltip("Tianhe").openTooltip();
 circleTianhe.setLatLng([latitude, longitude]);
 circleTianhe.setRadius(1000000);
-document.getElementById('Tianhelat').textContent = latitude.toFixed(2);
-document.getElementById('Tianhelon').textContent = longitude.toFixed(2);
+point = {lat: latitude, lng: longitude};
+//document.getElementById('Tianhelat').textContent = latitude.toFixed(2);
+//document.getElementById('Tianhelon').textContent = longitude.toFixed(2); 
+
+
+
 }
 
 getISSlocation()
