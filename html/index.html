@@ -3,7 +3,7 @@
 <html lang="en" dir="ltr">
   <head>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="device-width, initial-scale=1.0"/>
+    
     <meta http-equiv="X-UA-Compatible" content="ie-edge"/>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
@@ -12,25 +12,49 @@
    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
   crossorigin=""></script>
-<style media="screen">
-  #mapid{
-    height: 550px;
-  }
+<style>
+  body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
 </style>
-    <title>test api</title>
+    <title>Space Stations and HST location</title>
   </head>
   <body>
     <p>Satellite Locations</p>
     <p style="color: #800080"> ISS latitude: <span id="ISSlat"></span> ISS longitude: <span id="ISSlon"></span> ISS Altitude: <span id="ISSalt"></span><br>
-    <p style="color: #905800"> HST latitude: <span id="HSTlat"></span> HST longitude: <span id="HSTlon"></span> HST Altitude: <span id="HSTalt"></span><br>
+    <p style="color: #2e9000"> HST latitude: <span id="HSTlat"></span> HST longitude: <span id="HSTlon"></span> HST Altitude: <span id="HSTalt"></span><br>
     <p style="color: #000090"> Tianhe latitude: <span id="Tianhelat"></span> Tianhe longitude: <span id="Tianhelon"></span> Tianhe Altitude: <span id="Tianhealt"></span>
-    <div id="mapid"></div>
+    <div id="map"></div>
     <script>
 
-const mymap = L.map('mapid').setView([0, 0], 2);
-const marker = L.marker([0,0]).addTo(mymap);
-const markerHST = L.marker([0,0]).addTo(mymap);
-const markerTianhe = L.marker([0,0]).addTo(mymap);
+const mymap = L.map('map').setView([0, 0], 3);
+var corner1 = L.latLng(89, -179),
+corner2 = L.latLng(-89, 179),
+bounds = L.latLngBounds(corner1, corner2);
+
+var ISSIcon = L.icon({
+    iconUrl: 'iss.png',
+    iconSize:     [40, 40], // size of the icon
+    iconAnchor:   [20, 20] // point of the icon which will correspond to marker's location
+   });
+   var HSTIcon = L.icon({
+    iconUrl: 'hst.png',
+    iconSize:     [30, 30], // size of the icon
+    iconAnchor:   [15, 15] // point of the icon which will correspond to marker's location
+   });
+   var TianheIcon = L.icon({
+    iconUrl: 'tianhe.png',
+    iconSize:     [30, 30], // size of the icon
+    iconAnchor:   [15, 15] // point of the icon which will correspond to marker's location
+   });
+const marker = L.marker([0,0], {icon: ISSIcon}).addTo(mymap);
+const markerHST = L.marker([0,0], {icon: HSTIcon}).addTo(mymap);
+const markerTianhe = L.marker([0,0], {icon: TianheIcon}).addTo(mymap);
 
 const circle = L.circle([0, 0], {
     color: 'red',
@@ -63,9 +87,9 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 var ISSlatlngs = [];
 var HSTlatlngs = [];
 var polylineOptions = {
-               color: 'gray',
+               color: 'black',
                 weight: 6,
-               opacity: 0.0,
+               opacity: 0.4,
                smoothFactor: 2.0
              };
 var ISSpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
@@ -78,21 +102,24 @@ async function getISSlocation() {
 const responseISS = await fetch('./file.txt');
 const data = await responseISS.json();
 
-     
+    
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 const altitude = data[0].altitude;
 
 marker.setLatLng([latitude, longitude]);
 
-marker.bindTooltip('ISS ${latitude}').openTooltip();
-point = {lat: latitude, lng: longitude}; 
+//marker.bindTooltip('ISS').openTooltip();
+point = {lat: latitude, lon: longitude}; 
 circle.setLatLng([latitude, longitude]);
 circle.setRadius(1000000);
-//ISSpolyline.addLatLng(point);
-//if  (longitude > 178)) {
-//ISSpolyline.delete/
-//}
+
+
+if  (longitude < 179) {
+  ISSpolyline.addLatLng([latitude, longitude]);
+} else {
+ISSpolyline.removeFrom(mymap);
+} 
 
 document.getElementById('ISSlat').textContent = latitude.toFixed(2);
 document.getElementById('ISSlon').textContent = longitude.toFixed(2);
@@ -107,11 +134,17 @@ const longitude = data[0].longitude;
 const altitude = data[0].altitude;
 
 markerHST.setLatLng([latitude, longitude]);
-markerHST.bindTooltip("HST").openTooltip();
+//markerHST.bindTooltip("HST").openTooltip();
 point = {lat: latitude, lng: longitude}; 
+
 
 circleHST.setLatLng([latitude, longitude]);
 circleHST.setRadius(1000000);
+if  (longitude < 179) {
+  HSTpolyline.addLatLng([latitude, longitude]);
+} else {
+HSTolyline.removeFrom(mymap);
+} 
 
 
 document.getElementById('HSTlat').textContent = latitude.toFixed(2);
@@ -125,10 +158,18 @@ const latitude = data[0].latitude;
 const longitude = data[0].longitude;
 const altitude = data[0].altitude;
 markerTianhe.setLatLng([latitude, longitude]);
-markerTianhe.bindTooltip("Tianhe").openTooltip();
+//markerTianhe.bindTooltip("Tianhe").openTooltip();
 circleTianhe.setLatLng([latitude, longitude]);
 circleTianhe.setRadius(1000000);
-point = {lat: latitude, lng: longitude};
+
+
+
+if  (longitude < 179) {
+  Chinpolyline.addLatLng([latitude, longitude]);
+} else {
+Chinpolyline.removeFrom(mymap);
+} 
+
 document.getElementById('Tianhelat').textContent = latitude.toFixed(2);
 document.getElementById('Tianhelon').textContent = longitude.toFixed(2); 
 document.getElementById('Tianhealt').textContent = altitude;
@@ -160,9 +201,9 @@ console.log('error!');
 console.error(err);
 });
 
-setInterval(getISSlocation, 1000);
-setInterval(getHSTlocation, 1000);
-setInterval(getTianhelocation, 1000);
+setInterval(getISSlocation, 500);
+setInterval(getHSTlocation, 500);
+setInterval(getTianhelocation, 500);
 
     </script>
   </body>
