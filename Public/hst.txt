@@ -1,1 +1,1 @@
-[{"name":20580,"latitude":-18.594279999999998,"longitude":132.5804}]
+[{"name": 20580,"latitude":-23.54523,"longitude":111.24107,"altitude":542.09}]

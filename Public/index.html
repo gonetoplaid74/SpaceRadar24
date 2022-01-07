@@ -14,15 +14,16 @@
   crossorigin=""></script>
 <style media="screen">
   #mapid{
-    height: 800px;
+    height: 550px;
   }
 </style>
     <title>test api</title>
   </head>
   <body>
     <p>Satellite Locations</p>
-    <p style="color: #800080"> ISS latitude: <span id="ISSlat"></span> ISS longitude: <span id="ISSlon"></span>
-  
+    <p style="color: #800080"> ISS latitude: <span id="ISSlat"></span> ISS longitude: <span id="ISSlon"></span> ISS Altitude: <span id="ISSalt"></span><br>
+    <p style="color: #905800"> HST latitude: <span id="HSTlat"></span> HST longitude: <span id="HSTlon"></span> HST Altitude: <span id="HSTalt"></span><br>
+    <p style="color: #000090"> Tianhe latitude: <span id="Tianhelat"></span> Tianhe longitude: <span id="Tianhelon"></span> Tianhe Altitude: <span id="Tianhealt"></span>
     <div id="mapid"></div>
     <script>
 
@@ -61,9 +62,15 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 //L.toolTip(opacity = 0.5);
 var ISSlatlngs = [];
 var HSTlatlngs = [];
-//var ISSpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
-//var HSTpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
-//var Chinpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var polylineOptions = {
+               color: 'gray',
+                weight: 6,
+               opacity: 0.0,
+               smoothFactor: 2.0
+             };
+var ISSpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var HSTpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
+var Chinpolyline = L.polyline([], polylineOptions).bringToFront().addTo(mymap);
 
 
 async function getISSlocation() {
@@ -74,17 +81,22 @@ const data = await responseISS.json();
      
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
+const altitude = data[0].altitude;
 
 marker.setLatLng([latitude, longitude]);
 
-marker.bindTooltip("ISS").openTooltip();
+marker.bindTooltip('ISS ${latitude}').openTooltip();
 point = {lat: latitude, lng: longitude}; 
 circle.setLatLng([latitude, longitude]);
 circle.setRadius(1000000);
+//ISSpolyline.addLatLng(point);
+//if  (longitude > 178)) {
+//ISSpolyline.delete/
+//}
 
 document.getElementById('ISSlat').textContent = latitude.toFixed(2);
 document.getElementById('ISSlon').textContent = longitude.toFixed(2);
-     
+document.getElementById('ISSalt').textContent = altitude;     
 }
 
 async function getHSTlocation() {
@@ -92,7 +104,7 @@ const responseISS = await fetch('./hst.txt');
 const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
-
+const altitude = data[0].altitude;
 
 markerHST.setLatLng([latitude, longitude]);
 markerHST.bindTooltip("HST").openTooltip();
@@ -102,23 +114,24 @@ circleHST.setLatLng([latitude, longitude]);
 circleHST.setRadius(1000000);
 
 
-//document.getElementById('HSTlat').textContent = latitude.toFixed(2);
-//document.getElementById('HSTlon').textContent = longitude.toFixed(2);
-
+document.getElementById('HSTlat').textContent = latitude.toFixed(2);
+document.getElementById('HSTlon').textContent = longitude.toFixed(2);
+document.getElementById('HSTalt').textContent = altitude;
 }
 async function getTianhelocation() {
 const responseISS = await fetch('./chinese.txt');
 const data = await responseISS.json();
 const latitude = data[0].latitude;
 const longitude = data[0].longitude;
+const altitude = data[0].altitude;
 markerTianhe.setLatLng([latitude, longitude]);
 markerTianhe.bindTooltip("Tianhe").openTooltip();
 circleTianhe.setLatLng([latitude, longitude]);
 circleTianhe.setRadius(1000000);
 point = {lat: latitude, lng: longitude};
-//document.getElementById('Tianhelat').textContent = latitude.toFixed(2);
-//document.getElementById('Tianhelon').textContent = longitude.toFixed(2); 
-
+document.getElementById('Tianhelat').textContent = latitude.toFixed(2);
+document.getElementById('Tianhelon').textContent = longitude.toFixed(2); 
+document.getElementById('Tianhealt').textContent = altitude;
 
 
 }

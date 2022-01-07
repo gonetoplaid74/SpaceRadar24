@@ -22,13 +22,20 @@ t = ts.now()
                 
                 
 geocentric = satellite.at(t)
-print(geocentric)
+
 
 lat, lon = wgs84.latlon_of(geocentric)
+height = wgs84.height_of(geocentric)
                 
 latitude = str(lat)
 longitude = str(lon)
-                
+
+alt = str(height)                
+z = alt.split('e')     
+zz = z[0]
+alti = float(zz) * 149.597871
+altitude = round(alti,2)     
+             
             
 x = latitude.split('deg')
 xx = ''.join(x)
@@ -57,6 +64,6 @@ print(n)
 
 
 f = open('./public/chinese.txt', 'w')
-f.write('[{"name":' + str(n) + ',"latitude":'+ str(deglat) + ',"longitude":' + str(deglon) + '}]')
+f.write( '[{"name": ' + str(n) + ',"latitude":' + str(deglat) + ',"longitude":' + str(deglon) + ',"altitude":' + str(altitude) + '}]')
 f.close()
    
