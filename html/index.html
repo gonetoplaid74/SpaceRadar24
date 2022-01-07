@@ -26,7 +26,7 @@
   </head>
   <body>
     <p>Satellite Locations</p>
-    <p style="color: #800080"> ISS latitude: <span id="ISSlat"></span> ISS longitude: <span id="ISSlon"></span> ISS Altitude: <span id="ISSalt"></span><br>
+    <p style="color: #990299"> ISS latitude: <span id="ISSlat"></span> ISS longitude: <span id="ISSlon"></span> ISS Altitude: <span id="ISSalt"></span><br>
     <p style="color: #2e9000"> HST latitude: <span id="HSTlat"></span> HST longitude: <span id="HSTlon"></span> HST Altitude: <span id="HSTalt"></span><br>
     <p style="color: #000090"> Tianhe latitude: <span id="Tianhelat"></span> Tianhe longitude: <span id="Tianhelon"></span> Tianhe Altitude: <span id="Tianhealt"></span>
     <div id="map"></div>
@@ -57,20 +57,20 @@ const markerHST = L.marker([0,0], {icon: HSTIcon}).addTo(mymap);
 const markerTianhe = L.marker([0,0], {icon: TianheIcon}).addTo(mymap);
 
 const circle = L.circle([0, 0], {
-    color: 'red',
-    fillColor: '#f03',
+    color: 'purple',
+    fillColor: '#990299',
     fillOpacity: 0.2,
     radius: 500
 }).addTo(mymap);
 const circleHST = L.circle([0, 0], {
-    color: 'blue',
-    fillColor: '#0000ff',
+    color: 'green',
+    fillColor: '#2e9000',
     fillOpacity: 0.2,
     radius: 500
 }).addTo(mymap);
 const circleTianhe = L.circle([0, 0], {
-    color: 'purple',
-    fillColor: '#800080',
+    color: 'blue',
+    fillColor: '#000090',
     fillOpacity: 0.2,
     radius: 500
 }).addTo(mymap);
@@ -143,7 +143,7 @@ circleHST.setRadius(1000000);
 if  (longitude < 179) {
   HSTpolyline.addLatLng([latitude, longitude]);
 } else {
-HSTolyline.removeFrom(mymap);
+HSTpolyline.removeFrom(mymap);
 } 
 
 
