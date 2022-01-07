@@ -57,6 +57,6 @@ deglon = float(yyf)/10000
                 
 
 
-f = open( './public/file.txt', 'w' )
+f = open( './html/file.txt', 'w' )
 f.write( '[{"name": ' + str(n) + ',"latitude":' + str(deglat) + ',"longitude":' + str(deglon) + ',"altitude":' + str(altitude) + '}]')
 f.close()

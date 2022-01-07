@@ -63,7 +63,7 @@ print(deglon)
 print(n)
 
 
-f = open('./public/hst.txt', 'w')
+f = open('./html/hst.txt', 'w')
 f.write( '[{"name": ' + str(n) + ',"latitude":' + str(deglat) + ',"longitude":' + str(deglon) + ',"altitude":' + str(altitude) + '}]')
 f.close()
    
