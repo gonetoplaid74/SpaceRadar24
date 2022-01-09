@@ -1,0 +1,94 @@
+<!<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8"/>
+    
+    <meta http-equiv="X-UA-Compatible" content="ie-edge"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+   crossorigin=""/>
+
+   <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+  integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+  crossorigin=""></script>
+<style>
+  body {
+            padding: 0;
+            margin: 0;
+        }
+        html, body, #map {
+            height: 100%;
+            width: 100%;
+        }
+</style>
+    <title>Space Stations and HST location</title>
+  </head>
+  <body>
+    <p>Satellite Locations</p>
+    <p style="color: #990299"> ISS latitude: <span id="ISSlat"></span> ISS longitude: <span id="ISSlon"></span> ISS Altitude: <span id="ISSalt"></span><br>
+    <div id="map"></div>
+    <script>
+
+const mymap = L.map('map').setView([0, 0], 3);
+
+
+
+var SLIcon = L.icon({
+    iconUrl: 'iss.png',
+    iconSize:     [8, 8], // size of the icon
+    iconAnchor:   [4, 4] // point of the icon which will correspond to marker's location
+   });
+
+//const one = L.marker([0,0], {icon: ISSIcon}).addTo(mymap);
+//const two = L.marker([0,0], {icon: ISSIcon}).addTo(mymap);
+//const three = L.marker([0,0], {icon: ISSIcon}).addTo(mymap);
+var layerGroup = L.layerGroup().addTo(mymap);
+
+L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+    id: 'mapbox/streets-v11',
+    tileSize: 512,
+    zoomOffset: -1,
+    accessToken: 'pk.eyJ1IjoiYWxsYW53NzQiLCJhIjoiY2t1bzRiODM3MHF0dzMxb2FnNjExYmhseSJ9.5upvkY1wgnG0dgXiEUSZQw'
+}).addTo(mymap);
+
+
+
+
+
+async function getSLlocation() {
+layerGroup.clearLayers();
+const responseISS = await fetch('./starlinkapi.txt');
+const data = await responseISS.json();
+
+for(let i=0; i < data.length; i++){
+
+const latitude = data[i].latitude;
+const longitude = data[i].longitude;
+
+
+
+L.marker([latitude, longitude], {icon: SLIcon}).addTo(layerGroup);
+
+}
+
+
+}
+
+
+getSLlocation()
+.then(response => {
+})
+.catch(err => {
+console.log('error!');
+console.error(err);
+});
+
+
+setInterval(getSLlocation, 60000);
+
+    </script>
+  </body>
+</html>
