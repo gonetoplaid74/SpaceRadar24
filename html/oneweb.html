@@ -34,11 +34,11 @@
 
     </style>
 </style>
-    <title>Space Stations and HST location</title>
+    <title>OneWeb Saatellite Locations</title>
   </head>
   <body>
-    <p class="detail"><span class="title">Satellite Locations</span></p>
-    <p class="detail"><span class="black"> SL Altitude: 250 to 300Km </span> <span class="red"> - SL Altitude: 300 to 350KM</span> <span class="green"> - SL Altitude: 350 to 450KM</span><span class="orange"> - SL Altitude: 450 to 525KM</span><span class="blue"> - SL Altitude: Over 525KM</span> </p>
+    <p class="detail"><span class="title">OneWeb Satellite Locations</span></p>
+    <p class="detail"><span class="black"> OW Altitude: 250 to 300Km </span> <span class="red"> - OW Altitude: 300 to 350KM</span> <span class="green"> - OW Altitude: 350 to 450KM</span><span class="orange"> - OW Altitude: 450 to 525KM</span><span class="blue"> - OW Altitude: Over 525KM</span> </p>
     
     <div id="map"></div>
     <script>
@@ -90,9 +90,9 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
 
 
 
-async function getSLlocation() {
+async function getOWlocation() {
 layerGroup.clearLayers();
-const responseISS = await fetch('./starlinkapi.txt');
+const responseISS = await fetch('./onewebapi.txt');
 const data = await responseISS.json();
 
 for(let i=0; i < data.length; i++){
@@ -125,7 +125,7 @@ L.marker([latitude, longitude], {icon: SLIconB}).addTo(layerGroup);
 }
 
 
-getSLlocation()
+getOWlocation()
 .then(response => {
 })
 .catch(err => {
@@ -134,7 +134,7 @@ console.error(err);
 });
 
 
-setInterval(getSLlocation, 60000);
+setInterval(getOWlocation, 60000);
 
     </script>
   </body>

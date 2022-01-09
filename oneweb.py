@@ -2,14 +2,14 @@ from skyfield.api import load, wgs84, load_file
 
 import json
 import os, shutil
-stations_url = 'http://celestrak.com/NORAD/elements/starlink.txt'
+stations_url = 'http://celestrak.com/NORAD/elements/oneweb.txt'
 satellites = load.tle_file(stations_url)
 
 
 
 by_name = {sat.name: sat for sat in satellites}
 
-f = open( 'starlinkapi.txt', 'w' )
+f = open( 'onewebapi.txt', 'w' )
 f.write( '[')
 f.close()
 
@@ -62,15 +62,15 @@ for i in by_name:
                 
 
 
-    f = open( 'starlinkapi.txt', 'a' )
+    f = open( 'onewebapi.txt', 'a' )
     f.write( '{"latitude":' + str(deglat) + ',"longitude":' + str(deglon) + ',"altitude":' + str(altitude) + '},')
     f.close()
 
-with open('starlinkapi.txt', 'rb+') as filehandle:
+with open('onewebapi.txt', 'rb+') as filehandle:
     filehandle.seek(-1, os.SEEK_END)
     filehandle.truncate()
-f = open( 'starlinkapi.txt', 'a' )
+f = open( 'onewebapi.txt', 'a' )
 f.write(']')
 f.close()
 print("done")
-shutil.copy('starlinkapi.txt', './html/starlinkapi.txt')
+shutil.copy('onewebapi.txt', './html/onewebapi.txt')
