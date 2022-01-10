@@ -35,7 +35,11 @@ for i in by_name:
     alt = str(height)                
     z = alt.split('e')     
     zz = z[0]
-    alti = float(zz) * 149.597871
+    try:
+        alti = float(zz) * 149.597871
+    except ValueError as e:
+        alti = 100.000000
+        continue    
     altitude = round(alti,2)     
 
 
